@@ -1,3 +1,5 @@
+// This is Game Manager Script.
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
