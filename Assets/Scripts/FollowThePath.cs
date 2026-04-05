@@ -88,6 +88,12 @@ public class FollowThePath : MonoBehaviour {
 
     public void StopChase()
     {
+        // Verify this component is still valid before proceeding
+        if (this == null || gameObject == null || !gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         isChasing = false;
         playerTransform = null;
 
@@ -98,12 +104,23 @@ public class FollowThePath : MonoBehaviour {
     // Find the closest waypoint and set it as the target
     private void FindClosestWaypoint()
     {
+        // Safety check - if waypoints are null, exit immediately
+        if (waypoints == null || waypoints.Length == 0)
+        {
+            Debug.LogWarning("FindClosestWaypoint: Waypoints not initialized!");
+            return;
+        }
+
         float closestDistance = float.MaxValue;
         int closestWaypointIndex = 0;
 
         // Check distance to all waypoints
         for (int i = 0; i < waypoints.Length; i++)
         {
+            // Null check for waypoint transforms
+            if (waypoints[i] == null)
+                continue;
+
             float distance = Vector2.Distance(transform.position, waypoints[i].position);
 
             if (distance < closestDistance)

@@ -85,13 +85,6 @@ public class GameManager : MonoBehaviour
             SpawnManager.instance = null;
         }
 
-        // Deactivate the blur effect
-        if (globalVolume != null)
-        {
-            globalVolume.SetActive(false);
-            Debug.Log("Global Volume deactivated - Blur effect removed.");
-        }
-
         // Reset game state
         isGameOver = false;
 

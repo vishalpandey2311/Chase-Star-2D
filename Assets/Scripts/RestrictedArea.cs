@@ -8,6 +8,15 @@ public class RestrictedArea : MonoBehaviour
     // Array to track all enemies with FollowThePath component
     private FollowThePath[] enemies;
 
+    // Flag to prevent processing trigger events during scene shutdown
+    private bool isSceneShuttingDown = false;
+
+    private void OnDestroy()
+    {
+        // Mark that scene is shutting down to prevent trigger logic
+        isSceneShuttingDown = true;
+    }
+
     private void Start()
     {
         // Find the player GameObject (assumes it has tag "Player")
@@ -41,6 +50,12 @@ public class RestrictedArea : MonoBehaviour
     // Called when a collider exits the trigger
     private void OnTriggerExit2D(Collider2D collision)
     {
+        // Skip if scene is shutting down to prevent accessing destroyed objects
+        if (isSceneShuttingDown)
+        {
+            return;
+        }
+
         // Check if the object that exited is the player
         if (collision.CompareTag("Player"))
         {
@@ -50,7 +65,11 @@ public class RestrictedArea : MonoBehaviour
             // Stop chasing for all enemies and resume patrolling
             foreach (FollowThePath enemy in enemies)
             {
-                enemy.StopChase();
+                // Null check to prevent accessing destroyed enemies
+                if (enemy != null && enemy.gameObject != null)
+                {
+                    enemy.StopChase();
+                }
             }
 
             Debug.Log("Player exited restricted area. Enemies are now patrolling!");
